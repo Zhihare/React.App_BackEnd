@@ -5,6 +5,5 @@ export class CreateTasksDto {
     readonly description: string;
     readonly priority: string;
     readonly deadline: Date;
-    
-
+    readonly listId: number;
  }

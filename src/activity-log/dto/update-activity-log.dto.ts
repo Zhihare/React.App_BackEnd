@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateActivityLogDto } from './create-activity-log.dto';
 
-export class UpdateActivityLogDto extends PartialType(CreateActivityLogDto) {}
+export class UpdateActivityLogDto  {
+    readonly name: string;
+    readonly description: string;
+    readonly priority: string;
+    readonly deadline: Date;
+    readonly listId: number;
+}

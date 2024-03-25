@@ -26,7 +26,6 @@ export class Task {
 
     @OneToMany(type => ActivityLog, log => log.task)
     activityLog: ActivityLog[];
-
   
 }
 
