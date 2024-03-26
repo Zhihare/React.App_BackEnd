@@ -3,13 +3,13 @@ import { CreateTasksDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
-import { TaskRepository } from './tasks.repositori';
+import { TaskRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task)
-    private readonly taskRepository: TaskRepository, // Не нужно использовать параметр типа Task здесь
+    private readonly taskRepository: TaskRepository,
   ) { }
 
 

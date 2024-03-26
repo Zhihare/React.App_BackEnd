@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
@@ -6,6 +6,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksListModule } from './tasks-list/tasks-list.module';
 import { ActivityLogModule } from './activity-log/activity-log.module';
+import { ActivityLogService } from './activity-log/activity-log.service';
+import { ActivityLogMiddleware } from './activity-log/activity-log.middleware';
+import { ActivityLog } from './activity-log/entities/activity-log.entity';
+import { ActivityLogRepository } from './activity-log/activity-log.repository';
+import { TaskListRepository } from './tasks-list/tasks-list.repository';
+import { TaskList } from './tasks-list/entities/tasks-list.entity';
+import { Task } from './tasks/entities/task.entity';
+import { TaskRepository } from './tasks/tasks.repository';
 
 
 @Module({
@@ -22,9 +30,18 @@ import { ActivityLogModule } from './activity-log/activity-log.module';
       synchronize: true,
     }),  
     inject: [ConfigService],
-  }), TasksListModule, ActivityLogModule],
+  }), TasksListModule, ActivityLogModule,
+    TypeOrmModule.forFeature([ActivityLog, ActivityLogRepository]),
+    TypeOrmModule.forFeature([TaskList, TaskListRepository]),
+    TypeOrmModule.forFeature([Task, TaskRepository])],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ActivityLogService],
 })
   
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // consumer
+    //   .apply(ActivityLogMiddleware)
+    //   .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

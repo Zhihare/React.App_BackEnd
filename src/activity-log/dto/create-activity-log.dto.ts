@@ -1,8 +1,9 @@
+import { TaskList } from "src/tasks-list/entities/tasks-list.entity";
 
 export class CreateActivityLogDto  {
-    readonly name: string;
-    readonly description: string;
-    readonly priority: string;
-    readonly deadline: Date;
-    readonly listId: number;
+   readonly task: string;
+   readonly taskList: string; 
+   readonly action: string;
+   readonly description: string;
+   readonly timestamp: Date;
 }

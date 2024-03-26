@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { TaskList } from './entities/tasks-list.entity';
 import { CreateTasksListDto } from './dto/create-tasks-list.dto';
 import { UpdateTasksListDto } from './dto/update-tasks-list.dto';
-import { Task } from 'src/tasks/entities/task.entity';
+
 
 @Injectable()
 export class TasksListService {
@@ -28,6 +28,15 @@ export class TasksListService {
       throw new NotFoundException(`TaskList with ID ${id} not found`);
     }
     return taskList;
+  }
+
+  async getNameById(id: number): Promise<string> {
+    const taskList = await this.taskListRepository.findOne({ where: { id: id } });
+    if (taskList) {
+      return taskList.name;
+    } else {
+      throw new NotFoundException('Task list not found');
+    }
   }
 
   //  async findTasksForList(taskListId: number): Promise<Task[]> {

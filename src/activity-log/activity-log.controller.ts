@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ActivityLogService } from './activity-log.service';
 import { CreateActivityLogDto } from './dto/create-activity-log.dto';
 import { UpdateActivityLogDto } from './dto/update-activity-log.dto';
+import { Task } from 'src/tasks/entities/task.entity';
+import { ActivityLog } from './entities/activity-log.entity';
 
 @Controller('activity-log')
 export class ActivityLogController {
@@ -17,18 +19,9 @@ export class ActivityLogController {
     return this.activityLogService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.activityLogService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActivityLogDto: UpdateActivityLogDto) {
-    return this.activityLogService.update(+id, updateActivityLogDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.activityLogService.remove(+id);
+  @Get('findByAction/:action')
+  async findByAction(@Param('action') action: string): Promise<ActivityLog[]> {
+    return this.activityLogService.findByAction(action);
   }
 }
+
