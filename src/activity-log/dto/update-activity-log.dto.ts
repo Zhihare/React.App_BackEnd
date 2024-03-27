@@ -1,7 +1,8 @@
 import { TaskList } from "src/tasks-list/entities/tasks-list.entity";
+import { Task } from "src/tasks/entities/task.entity";
 
 export class UpdateActivityLogDto  {
-     readonly task: string;
+     readonly task: Task;
    readonly taskList: TaskList; 
    readonly action: string;
     readonly description: string;

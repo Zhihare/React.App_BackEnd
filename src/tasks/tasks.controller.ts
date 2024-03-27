@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, HttpCode, Header, Res } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTasksDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -27,14 +27,17 @@ export class TaskController {
   @Post()
   async create(@Body() createTaskDto: CreateTasksDto): Promise<Task> {
     try {
+       
+
       const task = await this.taskService.create(createTaskDto);
-      const taskListName = await this.taskListService.getNameById(createTaskDto.list);
-     await console.log(taskListName);
+
+      const { name } = await this.taskListService.findOne(createTaskDto.list);
+
        const createActivityLogDto: CreateActivityLogDto = {
-      task: createTaskDto.name,
-      taskList: taskListName, // Используем свойство name из createTasksListDto
+      task: task,
+      taskList: task.list,
       action: `Your created this task`,
-      description: `Your added ${createTaskDto.name} to the ${taskListName}`,
+      description: `Your added ${task.name} to the ${name}`,
       timestamp: new Date(),
       };
       await this.activityLogService.create(createActivityLogDto);
@@ -45,12 +48,51 @@ export class TaskController {
     }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateTasksListDto: UpdateTaskDto): Promise<Task> {
-    return this.taskService.update(+id, updateTasksListDto);
+  async update(@Param('id') id: string, @Body() updateTasktDto: UpdateTaskDto): Promise<Task> {
+    try {
+      const task = await this.taskService.update(+id, updateTasktDto);
+      const taskList = await this.taskListService.findOne(updateTasktDto.list);
+      
+      const createActivityLogDto: CreateActivityLogDto = {
+      task: task,
+      taskList: taskList,
+      action: `Your update this task`,
+      description: `Your update ${updateTasktDto.name} to the ${taskList.name}`,
+      timestamp: new Date(),
+      };
+
+      await this.activityLogService.create(createActivityLogDto);
+      return task;
+    } catch {
+       throw new HttpException('Failed to update task', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    return this.taskService.remove(+id);
+  @HttpCode(HttpStatus.OK)
+  @Header('Content-Type', 'application/json')
+  async remove(@Param('id') id: string, @Res() res): Promise<void> {
+   try {
+    
+     const  task = await this.taskService.findOne(+id);
+   
+    const createActivityLogDto: CreateActivityLogDto = {
+      task: null,
+      taskList: null,
+      action: `Your task '${task.name}' has been removed`,
+      description: "removed task list",
+      timestamp: new Date(),
+    };
+    
+     await this.activityLogService.create(createActivityLogDto);
+     
+     await this.taskService.remove(+id);
+
+   
+    res.status(HttpStatus.OK).send({ message: 'Task list removed successfully' });
+  } catch (error) {
+     console.error('Error while removing task list:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: 'An error occurred while removing the task list' });
   }
+}
 }

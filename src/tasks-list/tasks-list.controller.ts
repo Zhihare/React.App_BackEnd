@@ -36,7 +36,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
     // Создание и сохранение записи в журнале активности при создании списка задач
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
-      taskList: createTasksListDto.name, // Используем свойство name из createTasksListDto
+      taskList: taskList, // Используем свойство name из createTasksListDto
       action: `Your added ${createTasksListDto.name} to the planed`,
       description: "add a task to the plan",
       timestamp: new Date(),
@@ -62,7 +62,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
 
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
-      taskList: updateTasksListDto.name, // Используем свойство name из createTasksListDto
+      taskList: taskList, // Используем свойство name из createTasksListDto
       action: `Your list ${taskListName} has been changed to: ${updateTasksListDto.name}`,
       description: "changed name task list",
       timestamp: new Date(),
@@ -83,22 +83,21 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
   @Header('Content-Type', 'application/json')
   async remove(@Param('id') id: string, @Res() res): Promise<void> {
    try {
-    
-     const taskListName = await this.taskListService.getNameById(+id);
+     const {name} = await this.taskListService.findOne(+id);
      
-   
+      await this.taskListService.remove(+id);
+
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
-      taskList: taskListName,
-      action: `Your list '${taskListName}' has been removed`,
+      taskList: null,
+      action: `Your list '${name}' has been removed`,
       description: "removed task list",
       timestamp: new Date(),
     };
     
-     await this.activityLogService.create(createActivityLogDto);
-     
-     await this.taskListService.remove(+id);
-
+    
+    await this.activityLogService.create(createActivityLogDto);
+   
    
     res.status(HttpStatus.OK).send({ message: 'Task list removed successfully' });
   } catch (error) {

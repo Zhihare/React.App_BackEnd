@@ -21,13 +21,11 @@ export class ActivityLogService {
     const { task, taskList, action, description, timestamp } = createActivityLogDto;
   
     // Находим реальные объекты задачи и списка задач
-   
-    const realTaskList = await this.taskListRepository.findOne({ where: { name: taskList } });;
      
     // Создаем новую запись в журнале активности
     const activityLog = new ActivityLog();
-    activityLog.task = null;
-    activityLog.taskList = realTaskList;
+    activityLog.task = task;
+    activityLog.taskList = taskList;
     activityLog.action = action;
     activityLog.description = description;
     activityLog.timestamp = timestamp;
