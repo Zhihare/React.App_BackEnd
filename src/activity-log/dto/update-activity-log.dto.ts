@@ -6,5 +6,8 @@ export class UpdateActivityLogDto  {
    readonly taskList: TaskList; 
    readonly action: string;
     readonly description: string;
-    readonly timestamp: Date;
+  readonly timestamp: Date;
+   readonly taskId: number;
+    readonly listId: number;
+  
 }

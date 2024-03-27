@@ -33,20 +33,22 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
   try {
     const taskList = await this.taskListService.create(createTasksListDto);
     
-    // Создание и сохранение записи в журнале активности при создании списка задач
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
-      taskList: taskList, // Используем свойство name из createTasksListDto
-      action: `Your added ${createTasksListDto.name} to the planed`,
+      task_Id: 0,
+      listId: taskList.id,
+      taskList: taskList, // Здесь не передаем объект taskList, так как ожидается только идентификатор
+      action: `You added @${taskList.name} to the planed`,
       description: "add a task to the plan",
       timestamp: new Date(),
     };
-    
-    await this.activityLogService.create(createActivityLogDto); // Вызов метода создания записи в журнале активности
+
+    console.log(taskList);
+
+    await this.activityLogService.create(createActivityLogDto);
     return taskList;
   } catch (error) {
-    // Обработка ошибки
-    // Возвращаем HTTP-ответ с сообщением об ошибке
+    console.error('Failed to create task list', error);
     throw new HttpException('Failed to create task list', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -60,20 +62,21 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
     const taskListName = await this.taskListService.getNameById(+id);
     const taskList = await this.taskListService.update(+id, updateTasksListDto);
 
-    const createActivityLogDto: CreateActivityLogDto = {
-      task: null,
-      taskList: taskList, // Используем свойство name из createTasksListDto
-      action: `Your list ${taskListName} has been changed to: ${updateTasksListDto.name}`,
+       const createActivityLogDto: CreateActivityLogDto = {
+      task: null, // Идентификатор задачи, необходимо присвоить правильное значение
+      taskList: null, // Идентификатор списка задач, необходимо присвоить правильное значение
+      action: `Your list @${taskListName} has been changed to: @${updateTasksListDto.name}`,
       description: "changed name task list",
       timestamp: new Date(),
+      task_Id: 0, // Идентификатор задачи, необходимо присвоить правильное значение
+      listId: taskList.id // Идентификатор списка задач
     };
     
     await this.activityLogService.create(createActivityLogDto);
     
     return taskList;
   } catch (error) {
-    // Обработка ошибки
-    // Возвращаем HTTP-ответ с сообщением об ошибке
+  
     throw new HttpException('Failed to update task list', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -89,8 +92,10 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
 
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
+      task_Id: 0,
+      listId: 0,
       taskList: null,
-      action: `Your list '${name}' has been removed`,
+      action: `Your list @'${name}' has been removed`,
       description: "removed task list",
       timestamp: new Date(),
     };
@@ -105,9 +110,4 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ message: 'An error occurred while removing the task list' });
   }
 }
-
-//    @Get(':taskListId/tasks')
-//   findTasksForList(@Param('taskListId') taskListId: string): Promise<Task[]> {
-//     return this.taskListService.findTasksForList(+taskListId);
-//   }
  }

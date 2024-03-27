@@ -7,4 +7,6 @@ export class CreateActivityLogDto  {
    readonly action: string;
    readonly description: string;
    readonly timestamp: Date;
+    readonly task_Id: number;
+    readonly listId: number;
 }

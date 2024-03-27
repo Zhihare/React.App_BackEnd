@@ -15,33 +15,19 @@ export class ActivityLogService {
     private readonly taskRepository: Repository<Task>,
     @InjectRepository(TaskList)
     private readonly taskListRepository: Repository<TaskList>,
-  ) {}
+  ) { }
 
-  async create(createActivityLogDto: CreateActivityLogDto): Promise<ActivityLog> {
-    const { task, taskList, action, description, timestamp } = createActivityLogDto;
-  
-    // Находим реальные объекты задачи и списка задач
-     
-    // Создаем новую запись в журнале активности
-    const activityLog = new ActivityLog();
-    activityLog.task = task;
-    activityLog.taskList = taskList;
-    activityLog.action = action;
-    activityLog.description = description;
-    activityLog.timestamp = timestamp;
-
-    // Сохраняем запись в БД и возвращаем ее
+async create(createActivityLogDto: CreateActivityLogDto): Promise<ActivityLog> {
+    const activityLog = this.activityLogRepository.create(createActivityLogDto);
     return this.activityLogRepository.save(activityLog);
   }
 
 
-
-
- async findAll(): Promise<ActivityLog[]> {
+  async findAll(): Promise<ActivityLog[]> {
     return this.activityLogRepository.find();
   }
 
-  async findByAction(action: string): Promise<ActivityLog[]> {
-    return this.activityLogRepository.find({ where: { action } });
+  async findByTaskId(taskId: number): Promise<ActivityLog[]> {
+    return this.activityLogRepository.find({ where: {task_Id:  taskId } });
   }
 }

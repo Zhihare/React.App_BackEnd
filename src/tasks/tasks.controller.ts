@@ -35,11 +35,15 @@ export class TaskController {
 
        const createActivityLogDto: CreateActivityLogDto = {
       task: task,
+      task_Id: task.id,
       taskList: task.list,
+      listId: task.list.id,
       action: `Your created this task`,
-      description: `Your added ${task.name} to the ${name}`,
+      description: `Your added @${task.name} to the @${name}`,
       timestamp: new Date(),
       };
+
+      
       await this.activityLogService.create(createActivityLogDto);
       return task;
     } catch (error) { 
@@ -54,10 +58,12 @@ export class TaskController {
       const taskList = await this.taskListService.findOne(updateTasktDto.list);
       
       const createActivityLogDto: CreateActivityLogDto = {
-      task: task,
-      taskList: taskList,
+        task: task,
+        task_Id: task.id,
+        taskList: taskList,
+      listId: taskList.id,
       action: `Your update this task`,
-      description: `Your update ${updateTasktDto.name} to the ${taskList.name}`,
+      description: `Your update @${updateTasktDto.name} to the @${taskList.name}`,
       timestamp: new Date(),
       };
 
@@ -78,9 +84,11 @@ export class TaskController {
    
     const createActivityLogDto: CreateActivityLogDto = {
       task: null,
+      task_Id: 0,
+      listId: 0,
       taskList: null,
-      action: `Your task '${task.name}' has been removed`,
-      description: "removed task list",
+      action: `Your task @'${task.name}' has been removed`,
+      description: "removed task",
       timestamp: new Date(),
     };
     

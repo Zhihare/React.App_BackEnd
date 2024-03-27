@@ -19,9 +19,9 @@ export class ActivityLogController {
     return this.activityLogService.findAll();
   }
 
-  @Get('findByAction/:action')
-  async findByAction(@Param('action') action: string): Promise<ActivityLog[]> {
-    return this.activityLogService.findByAction(action);
+  @Get(':TaskId')
+  async findByAction(@Param('TaskId') TaskId: number): Promise<ActivityLog[]> {
+    return this.activityLogService.findByTaskId(TaskId);
   }
 }
 
