@@ -28,6 +28,7 @@ import { TaskRepository } from './tasks/tasks.repository';
       database: configService.get('DB_NAME'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      ssl: true,
     }),  
     inject: [ConfigService],
   }), TasksListModule, ActivityLogModule,
