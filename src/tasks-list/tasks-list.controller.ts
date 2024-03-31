@@ -65,7 +65,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
        const createActivityLogDto: CreateActivityLogDto = {
       task: null, // Идентификатор задачи, необходимо присвоить правильное значение
       taskList: null, // Идентификатор списка задач, необходимо присвоить правильное значение
-      action: `Your list @${taskListName} has been changed to: @${updateTasksListDto.name}`,
+      action: `Your list @${taskListName}@ has been changed to: @${updateTasksListDto.name}@`,
       description: "changed name task list",
       timestamp: new Date(),
       task_Id: 0, // Идентификатор задачи, необходимо присвоить правильное значение
@@ -95,7 +95,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
       task_Id: 0,
       listId: 0,
       taskList: null,
-      action: `Your list @'${name}' has been removed`,
+      action: `Your list @'${name}'@ has been removed`,
       description: "removed task list",
       timestamp: new Date(),
     };
