@@ -21,7 +21,7 @@ export class Task {
     @Column({ length: 50, nullable: true })
     priority: string;
 
-    @ManyToOne(type => TaskList, list => list.tasks)
+    @ManyToOne(type => TaskList, list => list.tasks, { onDelete: 'CASCADE' })
     list: TaskList;
 
     @OneToMany(type => ActivityLog, log => log.task)

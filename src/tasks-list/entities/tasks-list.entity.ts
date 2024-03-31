@@ -10,7 +10,7 @@ export class TaskList {
     @Column({ length: 255 })
     name: string;
 
-    @OneToMany(type => ActivityLog, task => task.taskList)
+    @OneToMany(type => ActivityLog, task => task.taskList, { onDelete: 'CASCADE' })
     tasklist: ActivityLog[];
 
     @OneToMany(type => Task, task => task.list, { onDelete: 'CASCADE' })
