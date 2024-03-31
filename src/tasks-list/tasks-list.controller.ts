@@ -38,7 +38,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
       task_Id: 0,
       listId: taskList.id,
       taskList: taskList, // Здесь не передаем объект taskList, так как ожидается только идентификатор
-      action: `You added @${taskList.name} to the planed`,
+      action: `You added @${taskList.name}@ to the planed`,
       description: "add a task to the plan",
       timestamp: new Date(),
     };
@@ -95,7 +95,7 @@ async create(@Body() createTasksListDto: CreateTasksListDto): Promise<TaskList> 
       task_Id: 0,
       listId: 0,
       taskList: null,
-      action: `Your list @'${name}'@ has been removed`,
+      action: `Your list @${name}@ has been removed`,
       description: "removed task list",
       timestamp: new Date(),
     };

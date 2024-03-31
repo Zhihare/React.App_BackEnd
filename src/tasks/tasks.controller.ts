@@ -38,7 +38,7 @@ export class TaskController {
       task_Id: task.id,
       taskList: task.list,
       listId: task.list.id,
-      action: `Your added @${task.name} to the @${name}`,
+      action: `Your added @${task.name}@ to the @${name}@`,
       description: `You created this task`,
       timestamp: new Date(),
       };
@@ -87,7 +87,7 @@ export class TaskController {
       task_Id: 0,
       listId: 0,
       taskList: null,
-      action: `Your task @'${task.name}'@ has been removed`,
+      action: `Your task @${task.name}@ has been removed`,
       description: "removed task",
       timestamp: new Date(),
     };
